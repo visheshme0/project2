@@ -1,16 +1,16 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from openi import OpenAI
+from openai import OpenAI
 import os
 
 app = FastAPI()
 
 # Load OpenAI API key from environment variables
-api_key = os.getenv("OPEN_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise RuntimeError("OPENAI_API_KEY is not set in environment variables")
 
-client = openai.OpenAI(api_key=api_key)
+client = OpenAI(api_key=api_key)  # Correct client initialization
 
 # CORS Middleware (optional)
 app.add_middleware(
@@ -40,18 +40,12 @@ async def answer_question(question: str = Form(...), file: UploadFile = File(Non
             # (Future: process file content if needed)
 
         # Call OpenAI API for an answer
-        client=OpenAI(api_key)
-        chat_completion=client.chat.completions.create(
-            message=[{"role":"user","content":question}],
+        chat_completion = client.chat.completions.create(
+            messages=[{"role": "user", "content": question}],  # Fix messages syntax
             model="gpt-3.5-turbo"
         )
-        response=chat_completion
 
-
-        return {"question": question, "answer": response.choices[0].message.content}
-
-    except openai.OpenAIError as e:
-        raise HTTPException(status_code=500, detail=f"OpenAI API Error: {e}")
+        return {"question": question, "answer": chat_completion.choices[0].message.content}
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Server Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
