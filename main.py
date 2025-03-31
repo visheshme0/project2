@@ -4,7 +4,6 @@ import google.generativeai as genai
 import pandas as pd
 import json
 import os
-import fitz  # Better PDF processing
 
 app = FastAPI()
 
@@ -45,14 +44,9 @@ async def process_file(file: UploadFile):
                 data = json.loads(content.decode("utf-8"))
                 file_content = json.dumps(data, indent=2)
             except json.JSONDecodeError:
-                raise HTTPException(status_code=400, detail="Invalid JSON file")
-        elif  file_extension == "pdf":
-            with fitz.open(stream=content, filetype="pdf") as pdf:
-                file_content = "\n".join(page.get_text() for page in pdf)
-            except Exception:
-                raise HTTPException(status_code=400, detail="Error reading PDF file")
+                raise HTTPException(status_code=400, detail="Invalid JSON file"
         else:
-            raise HTTPException(status_code=400, detail="Unsupported file format. Allowed: TXT, CSV, JSON, PDF.")
+            raise HTTPException(status_code=400, detail="Unsupported file format. Allowed: TXT, CSV, JSON.")
 
         return file_content[:5000]  # Limit content size to prevent API overload
     except Exception as e:
