@@ -11,7 +11,8 @@ if not api_key:
     raise RuntimeError("OPENAI_API_KEY is not set in environment variables")
 
 # ✅ Correct client initialization
-client = OpenAI(api_key=api_key)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 # CORS Middleware (optional)
 app.add_middleware(
