@@ -15,7 +15,7 @@ async def home():
     """
     return {"message": "Welcome to the LLM API! Use the /api/ endpoint to ask questions."}
 
-@app.get("/api/")
+@app.post("/api/")
 async def answer_question(question: str = Form(...), file: UploadFile = File(None)):
     """
     Accepts a question and an optional file, then returns an LLM-generated answer.
