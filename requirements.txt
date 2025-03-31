@@ -2,5 +2,4 @@ fastapi
 uvicorn
 google-generativeai
 python-multipart
-numpy
-PyPDF2
+pdfplumber
