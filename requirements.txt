@@ -3,4 +3,5 @@ uvicorn
 google-generativeai
 python-multipart
 pandas
-json
+numpy
+PyPDF2
