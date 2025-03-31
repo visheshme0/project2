@@ -33,7 +33,7 @@ async def answer_question(question: str = Form(...), file: UploadFile = File(Non
             file_content = await file.read()
 
         # Call Gemini API for an answer
-        model = genai.GenerativeModel("gemini-1.0-pro")
+        model = genai.GenerativeModel("gemini-pro")
         response = model.generate_content(question)
 
         return {"question": question, "answer": response.text}
