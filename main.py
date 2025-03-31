@@ -40,11 +40,11 @@ async def answer_question(question: str = Form(...), file: UploadFile = File(Non
             # (Future: process file content if needed)
 
         # Call OpenAI API for an answer
-        client = openai.OpenAI()
-        response = client.chat.completions.create(
-            model="gpt-4o",
+        response = openai.ChatCompletion.create(
+            model="gpt-4",  # Ensure you use the correct model name
             messages=[{"role": "user", "content": question}]
         )
+
 
         return {"question": question, "answer": response.choices[0].message.content}
 
