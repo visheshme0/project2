@@ -1,6 +1,6 @@
 fastapi
 uvicorn
-openai
+google-generativeai
 pandas  
 numpy   
 python-multipart
