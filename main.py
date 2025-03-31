@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, Query, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import google.generativeai as genai
 import os
@@ -12,7 +12,7 @@ if not GEMINI_API_KEY:
 
 genai.configure(api_key=GEMINI_API_KEY)
 
-# CORS Middleware (optional)
+# Enable CORS (optional)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -21,22 +21,27 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-async def home():
-    return {"message": "Welcome to the LLM API! Use the /api/ endpoint to ask questions."}
-
-@app.post("/api/")
-async def answer_question(question: str = Form(...), file: UploadFile = File(None)):
+# ✅ GET Request Support
+@app.get("/api/")
+async def answer_question_get(question: str = Query(..., description="Your question")):
     try:
-        # If a file is uploaded, process it (currently not implemented)
-        if file:
-            file_content = await file.read()
-
-        # Call Gemini API for an answer
-        model = genai.GenerativeModel("gemini-1.5-pro")
+        model = genai.GenerativeModel("gemini-1.5-pro")  # Use a valid model
         response = model.generate_content(question)
-
         return {"question": question, "answer": response.text}
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Server Error: {e}")
+
+# ✅ POST Request Support
+@app.post("/api/")
+async def answer_question_post(question: str = Form(...)):
+    try:
+        model = genai.GenerativeModel("gemini-1.5-pro")  # Use a valid model
+        response = model.generate_content(question)
+        return {"question": question, "answer": response.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Server Error: {e}")
+
+# Home route to check if API is running
+@app.get("/")
+async def home():
+    return {"message": "Welcome to the LLM API! Use GET or POST on /api/ to ask questions."}
