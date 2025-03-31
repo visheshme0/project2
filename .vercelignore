@@ -1,5 +1,8 @@
 venv/
+.venv/
 __pycache__/
-.git/
-node_modules/
-.vercel
+*.log
+*.zip
+*.csv
+*.xlsx
+*.pdf
