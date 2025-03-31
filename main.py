@@ -10,7 +10,8 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise RuntimeError("OPENAI_API_KEY is not set in environment variables")
 
-client = OpenAI(api_key=api_key)  # Correct client initialization
+# ✅ Correct client initialization
+client = OpenAI(api_key=api_key)
 
 # CORS Middleware (optional)
 app.add_middleware(
@@ -23,9 +24,7 @@ app.add_middleware(
 
 @app.get("/")
 async def home():
-    """
-    Home route to check if API is running.
-    """
+    """Home route to check if API is running."""
     return {"message": "Welcome to the LLM API! Use the /api/ endpoint to ask questions."}
 
 @app.post("/api/")
@@ -39,10 +38,10 @@ async def answer_question(question: str = Form(...), file: UploadFile = File(Non
             file_content = await file.read()
             # (Future: process file content if needed)
 
-        # Call OpenAI API for an answer
+        # ✅ Call OpenAI API for an answer
         chat_completion = client.chat.completions.create(
-            messages=[{"role": "user", "content": question}],  # Fix messages syntax
-            model="gpt-3.5-turbo"
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": question}]
         )
 
         return {"question": question, "answer": chat_completion.choices[0].message.content}
