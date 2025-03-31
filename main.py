@@ -40,6 +40,7 @@ async def answer_question(question: str = Form(...), file: UploadFile = File(Non
             # (Future: process file content if needed)
 
         # Call OpenAI API for an answer
+        client = openai.OpenAI()
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": question}]
