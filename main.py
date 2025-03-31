@@ -59,16 +59,6 @@ async def process_file(file: UploadFile):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
 
-# ✅ GET Request Support
-@app.get("/api/")
-async def answer_question_get(question: str = Query(..., description="Your question")):
-    try:
-        model = genai.GenerativeModel("gemini-1.5-pro")
-        response = model.generate_content(question)
-        return {"question": question, "answer": response.text}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Server Error: {str(e)}")
-
 # ✅ POST Request Support (With File Upload)
 @app.post("/api/")
 async def answer_question_post(question: str = Form(...), file: UploadFile = File(None)):
